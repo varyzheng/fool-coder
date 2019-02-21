@@ -17,5 +17,6 @@ module.exports = {
     'semi': [2, 'never'],
     'import/no-dynamic-require': 'off',
     'no-param-reassign': 'off',
+    'linebreak-style': [0, 'error', 'windows'],
   },
 };

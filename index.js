@@ -7,5 +7,5 @@ log('load the data source', path)
 const obj = require(path)
 
 if (obj) {
-  start(obj)
+  start(obj, path)
 }
