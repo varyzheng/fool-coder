@@ -8,4 +8,14 @@ const log = (operator, content = '') => {
     console.log(`${time}${LOG_SPACE}${operator}:`)
   }
 }
-module.exports = log
+
+const error = (operator, content = '') => {
+  const time = new Date().toLocaleString()
+  if (content) {
+    console.error(`${time}${LOG_SPACE}${operator}${LOG_LINE}\n`, content)
+  } else {
+    console.error(`${time}${LOG_SPACE}${operator}:`)
+  }
+}
+
+module.exports = { log, error }

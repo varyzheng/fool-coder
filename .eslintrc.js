@@ -16,5 +16,6 @@ module.exports = {
     'no-console': 'off',
     'semi': [2, 'never'],
     'import/no-dynamic-require': 'off',
+    'no-param-reassign': 'off',
   },
 };
