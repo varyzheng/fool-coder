@@ -1,0 +1,31 @@
+{
+  "name": "fool-coder",
+  "version": "1.0.0",
+  "description": "A code generator for Vue and React, mainly to do the CRUD. It may help you write less code, but it can't replace you.",
+  "main": "index.js",
+  "scripts": {
+    "start": "node index",
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/varyzheng/fool-coder.git"
+  },
+  "keywords": [
+    "vue code generator",
+    "react code generator",
+    "coder",
+    "CRUD"
+  ],
+  "author": "varyzheng",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/varyzheng/fool-coder/issues"
+  },
+  "homepage": "https://github.com/varyzheng/fool-coder#readme",
+  "devDependencies": {
+    "eslint": "^5.14.1",
+    "eslint-config-airbnb-base": "^13.1.0",
+    "eslint-plugin-import": "^2.16.0"
+  }
+}
