@@ -1,4 +1,5 @@
 const User = {
+  file: 'vue',
   data: 'user',
   basicPath: '/basic/path',
   create: { api: '/v1/user/create', router: 'userCreate' },
@@ -16,8 +17,8 @@ const User = {
       type: 'number', key: 'city_code', title: '城市', inDetail: {}, selector: { value: 'city_code', text: 'city_name', source: '/v1/city/suggest' }, filter: {},
     },
     cityDisplay: { key: 'city_display', title: '城市', inTable: {} },
-    createAt: {
-      type: 'date', key: 'create_at', title: '注册时间', inTable: {}, inDetail: { cannotEdit: true }, selector: {},
+    birthday: {
+      type: 'date', key: 'birthday', title: '出生日期', inTable: {}, inDetail: {}, selector: {},
     },
     operation: { key: 'operation', title: '操作', inTable: { needRender: true } },
   },

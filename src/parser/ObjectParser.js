@@ -21,6 +21,7 @@ const parseClass = (config) => {
 
 const parseField = (config) => {
   const { fields } = config
+  const fieldList = []
   Object.keys(fields).forEach((key) => {
     const field = fields[key]
     if (field.selector) {
@@ -39,7 +40,10 @@ const parseField = (config) => {
         field.selectSource = field.filter.source
       }
     }
+    field.fieldName = key
+    fieldList.push(field)
   })
+  config.fieldList = fieldList
 }
 
 const parse = (config) => {
