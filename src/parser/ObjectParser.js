@@ -41,6 +41,9 @@ const parseField = (config) => {
       }
     }
     field.fieldName = key
+    if (!field.key) {
+      field.key = key
+    }
     fieldList.push(field)
   })
   config.fieldList = fieldList

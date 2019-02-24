@@ -1,1 +1,84 @@
-<%= listAPI %>
+<template>
+	<div class="warpper">
+    <el-form :model="<%= data %>" class="<%= data %>-form" ref="<%= data %>Form">
+      <%_ fieldList.forEach(function(field){ _%>
+        <%_ if (field.filter) {
+          let title = field.title
+          let name = field.fieldName
+          let model = 'params.' + name _%>
+      <el-form-item label="<%= title %>">
+        <el-select v-model="<%= model %>" clearable reserve-keyword remote :remote-method="search<%= name %>List"  @focus="search<%= name %>List('')">
+          <el-option v-for="(item, index) in <%= name %>List" :key="index" :label="item.<%= field.selectText %>" :value="item.<%= field.selectValue %>"></el-option>
+        </el-select>
+      </el-form-item> 
+        <%_ }_%>
+      <%_ })_%>
+      <el-button type="primary" @click="query">Search</el-button>
+    </el-form>
+		<Table :columns="columns" :data="list"></Table>
+		<!-- 分页器 -->
+		<Page :total="totalCount" :current="params.page" prev-text="Prev" next-text="Next"
+			:page-size="params.perpage" @on-change="onPageChange" @on-page-size-change="onPageSizeChange" show-elevator show-sizer show-total />
+	</div>
+</template>
+
+<fool-coder-script>
+  import { $get, $post } from '/util/ajax'
+	export default {
+		data() {
+			return {
+				params: {
+					page:1,
+					perpage: 10,
+        },
+        columns: [
+          <%_ fieldList.forEach(function(field){ _%>
+            <%_ if (field.inTable) {_%>
+          {
+            key: <%= field.key %>,
+            title: '<%= field.title %>',
+              <%_ if (field.inTable.needRender) {_%>
+            render: (h, params) => {
+              // TODO
+            },
+              <%_ } _%>
+          },
+            <%_ }_%>
+          <%_ })_%>
+        ],
+				list: [],
+				totalCount: 0,
+			}
+		},
+		created () {
+      this.query()
+		},
+		methods: {
+			<%_ fieldList.forEach(function(field){ _%>
+        <%_ if (field.filter && field.selectSource) {_%>
+      async search<%= field.fieldName %>List (query) {
+        const result = await $get('<%= field.selectSource %>', { query })
+        if (result && result.code === 0) {
+          this.<%= field.fieldName %>List = result.list
+        }
+      },
+        <%_ }_%>
+      <%_ })_%> 
+			query() {
+        const result = await $get('<%= listAPI %>', params)
+        if (result && result.code === 0) {
+          this.list = result.list
+        }
+			},
+			onPageChange(page) {
+				this.params.page = page
+				this.query()
+			},
+			onPageSizeChange(perpage) {
+        this.params.perpage = perpage
+        this.params.page = 1
+				this.query()
+			},
+		}
+	}
+</fool-coder-script>

@@ -1,1 +1,85 @@
-<%= updateAPI %>
+<%_ let primaryKey _%>
+<template>
+  <el-form :model="<%= data %>" class="<%= data %>-form" ref="<%= data %>Form">
+    <%_ fieldList.forEach(function(field){ _%>
+      <%_ if (field.inDetail) {
+        let title = field.title
+        let name = field.fieldName
+        let model = data + '.' + name 
+        if (field.primary) {
+          primaryKey = name
+        }_%>
+        <%_ if (!field.selector) {_%>
+    <el-form-item required label="<%= title %>">
+      <el-input v-model="<%= model %>" placeholder="请输入<%= title %>"<%- field.inDetail.cannotEdit ? ` :disabled="true"` : ''%>></el-input>
+    </el-form-item> 
+        <%_ } else if (field.type === 'date') {_%>
+    <el-form-item label="<%= title %>">
+      <el-date-picker type="date" v-model="<%= model %>" placeholder="选择日期"<%- field.inDetail.cannotEdit ? ` :disabled="true"` : ''%>></el-date-picker>
+    </el-form-item>
+        <%_ } else {_%>
+    <el-form-item label="<%= title %>">
+      <el-select v-model="<%= model %>" placeholder="请选择<%= title %>" clearable reserve-keyword remote :remote-method="search<%= name %>List"  @focus="search<%= name %>List('')"<%- field.inDetail.cannotEdit ? ` :disabled="true"` : ''%>>
+        <el-option v-for="(item, index) in <%= name %>List" :key="index" :label="item.<%= field.selectText %>" :value="item.<%= field.selectValue %>"></el-option>
+      </el-select>
+    </el-form-item> 
+        <%_ }_%>
+      <%_ }_%>
+    <%_ })_%>
+    <el-button type="primary" @click="submit">Submit</el-button>
+  </el-form>
+</template>
+
+<fool-coder-script>
+import { $get, $post } from '/util/ajax'
+export default {
+  data() {
+    return {
+      <%= data %>: {
+        <%_ fieldList.forEach(function(field){ _%>
+          <%_ if (field.inDetail) {_%>
+        <%= field.fieldName %>: <%- field.type === 'number' ? 0 : `''`%>,
+          <%_ }_%>
+        <%_ })_%>
+      },
+      <%_ fieldList.forEach(function(field){ _%>
+        <%_ if (field.selector && field.type !== 'date') {_%>
+      <%= field.fieldName %>List: [],
+        <%_ }_%>
+      <%_ })_%> 
+    }
+  },
+  created() {
+    <%_ _%>
+    const <%= primaryKey %> = this.$router.params.<%= primaryKey %>
+    const result = await $get('<%= detailAPI %>', { <%= primaryKey %>})
+    if (result && result.code === 0) {
+      this.<%= data %> = result.object
+    }
+  },
+  methods: {
+    <%_ fieldList.forEach(function(field){ _%>
+      <%_ if (field.selector && field.selectSource) {_%>
+    async search<%= field.fieldName %>List (query) {
+      const result = await $get('<%= field.selectSource %>', { query })
+      if (result && result.code === 0) {
+        this.<%= field.fieldName %>List = result.list
+      }
+    },
+      <%_ }_%>
+    <%_ })_%> 
+    async submit () {
+      this.$refs.<%= data %>Form.validate((valid) => {
+        if (valid) {
+          const result = await $post('<%= updateAPI %>', this.<%= data %>)
+          if (result && result.code === 0) {
+            return this.$message.success('Operation success!')
+          }
+        } else {
+					return this.$message.error('Please check form valid!')
+				}
+      })
+    }
+  }
+}
+</fool-coder-script>
